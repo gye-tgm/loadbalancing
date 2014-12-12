@@ -9,7 +9,7 @@ public class XMLRPCTest {
     @org.junit.Before
     public void setUp() throws Exception {
         serverReference = new ServerReference("http://localhost:5000/RPC2");
-        slaveServer = new SlaveServer();
+        slaveServer = new SlaveServer(5000);
     }
 
     @org.junit.After

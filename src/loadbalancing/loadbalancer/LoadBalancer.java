@@ -27,8 +27,10 @@ public class LoadBalancer extends Thread implements Server {
     }
 
     @Override
-    public String call(String request) {
-        return strategy.getNext().call(request);
+    public synchronized String call(String request) {
+        ServerReference serverReference = strategy.getNext();
+        strategy.increment(serverReference);
+        return serverReference.call(request);
     }
 
     public void register(ServerReference serverReference) {
@@ -37,8 +39,8 @@ public class LoadBalancer extends Thread implements Server {
 
     public static void main(String[] args){
         LoadBalancer loadBalancer = new LoadBalancer(new LCF());
-        loadBalancer.register(new WeightedServerReference("http://localhost:5000", 5));
-        loadBalancer.register(new WeightedServerReference("http://localhost:5001", 6));
+        loadBalancer.register(new LCFServerReference("http://localhost:5000"));
+        loadBalancer.register(new LCFServerReference("http://localhost:5001"));
         loadBalancer.start();
     }
 }
