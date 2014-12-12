@@ -3,5 +3,6 @@ package loadbalancing;
 /**
  *
  */
-public class Server {
+public interface Server {
+    public String call(String request);
 }
