@@ -37,8 +37,8 @@ public class LoadBalancer extends Thread implements Server {
 
     public static void main(String[] args){
         LoadBalancer loadBalancer = new LoadBalancer(new LCF());
-        loadBalancer.register(new WeightedServerReference("localhost:500", 5));
-        loadBalancer.register(new LCFServerReference("localhost:501", 6));
+        loadBalancer.register(new WeightedServerReference("http://localhost:5000", 5));
+        loadBalancer.register(new WeightedServerReference("http://localhost:5001", 6));
         loadBalancer.start();
     }
 }
