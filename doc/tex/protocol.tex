@@ -1,0 +1,435 @@
+\documentclass[11pt, a4paper]{article}
+% \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{url} 
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{subcaption}
+
+\lstnewenvironment{python}[1][]
+{\lstset{
+		language=python,
+		numbers=left,
+		numberstyle=\tiny,
+		keywordstyle=\color{blue},       	% keyword style
+		basicstyle=\footnotesize\ttfamily,	% font
+		numbers=left,						% line numbers
+		tabsize=2,							% tabsize in spaces
+		#1}}
+{}
+
+\lstnewenvironment{bash}[1][]
+{\lstset{
+		language=bash,
+		numbers=left,
+		numberstyle=\tiny,
+		numbers=none,
+		basicstyle=\footnotesize\ttfamily,	% font
+		tabsize=2,							% tabsize in spaces
+		#1}}
+{}
+
+\lstnewenvironment{code}[1][]
+{\lstset{numbers=left,
+		numberstyle=\tiny,
+		keywordstyle=\color{blue},       % keyword style
+		basicstyle=\footnotesize\ttfamily,	% font
+		numbers=left,						% line numbers
+		tabsize=2,							% tabsize in spaces
+		#1}}
+{}
+
+\title{DezSys03 - Synchronization of heterogeneous databases}
+\author{Elias Frantar, Gary Ye (5AHITT)}
+\date{\today{}, Wien}
+\begin{document}
+
+\lstset{
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+% commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+% frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+% language=bash,                   % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=none,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+%  numberstyle=\tiny\color{gray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+%  stepnumber=1,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{red},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname,                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  belowskip=-3em,    
+}
+
+\setlength\parindent{0pt}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\section{Requirements}
+
+\subsection{Aufgabenstellung}
+Dokumentieren Sie Ihren Versuch zwei heterogene Datenbanksysteme (MySQL, Postgresql) zu synchronisieren. Verwenden Sie dabei unterschiedliche Schemata (verschiedene Tabellenstruktur) und zeigen Sie auf, welche Schwierigkeiten bei den unterschiedlichen Heterogenitätsgraden auftreten können (wie im Unterricht besprochen) [2Pkt].
+\\\\
+Implementieren Sie eigenständig eine geeignete Middleware [8Pkt]. Testen Sie Ihr gewähltes System mit mehr als einer Tabelle [4Pkt] (Synchronisation bei Einfügen, Ändern und Löschen von Einträgen) und dokumentieren Sie die Funktionsweise, sowie auch die Problematiken bzw. nicht abgedeckte Fälle [2Pkt].
+\\\\
+Das PDF soll ausführlich beschreiben, welche Annahmen getroffen wurden. Der Source-Code muss den allgemeinen Richtlinien entsprechen und ebenfalls abgegeben werden.
+\\\\
+Gruppengröße: 2
+Gesamtpunkte: 16 [Aufteilung in eckigen Klammern ersichtlich]
+
+\subsection{Punkte}
+
+\begin{itemize}
+
+	\item Dokumentation der Synchronisation [2Pkt]
+	
+	\begin{itemize}
+		\item Implementierung der Middleware [8Pkt]
+		\item Zeittrigger bzw. Listener für Synchronisation bzw. DBMS Logs
+		\item Konfiguration bez. Mapping der Tabellen und Attribute
+		\item Konfliktlösung bei Zeitüberschneidung bzw. Datenproblemen (Log)
+		\item LostUpdate-Problem
+	\end{itemize}
+
+	\item Test mit mehr als einer Tabelle und mindestens 10 Datensätze pro Tabelle [4Pkt]
+	
+	\begin{itemize}
+		\item Uni- und Bidirektionale Änderungen mehrerer Tabellen
+		\item Einfügen, Ändern und Löschen
+	\end{itemize}	
+
+	\item Dokumenation der Funktionsweise, Problematiken und Problemfälle [2Pkt]
+	
+	\begin{itemize}
+		\item Designdokumentation (Code + DB)
+		\item Synchronisationsverhalten
+		\item unbehandelte Problemfälle
+	\end{itemize}	
+
+	\item Protokoll und Sourcecodedokumentation [0..-6Pkt]
+
+\end{itemize}
+
+\newpage
+
+\section{Effort Estimation and Work Distribution}
+
+The following table compares the estimated with the actually needed amount of time for completing each individual task.
+
+The estimation is in the second column while the columns that follow are actual values.
+
+\parskip 12pt
+\begin{tabular} {| l | c | c | c | c |}
+	\hline
+	Task					&	Estimation		& 	Elias 	& 	Gary 	& 	Team	\\ \hline \hline
+	Preparation				&	15				&	4.5		&  	4.5		&	9		\\ \hline
+	Design					&	4				&	2		&	2		&	4		\\ \hline
+	Databases				&	4				&	2  		&	2 		& 	4		\\ \hline
+	Implementation			&	15				&	1		&	5		& 	3 		\\ \hline
+	Testing					&	5				&	3		& 	1 		& 	4 		\\ \hline
+	Documentation			&	10				&	5		&	3 		& 	8		\\ \hline 
+	Total					&	53				&	17.5	&	17.5	& 	35		\\
+	\hline
+\end{tabular}
+
+\section{Design}
+
+\subsection {Synchronization Behavior}
+
+We decided to use the \textit{Full Extract and Delta} synchronization method for a few simple reasons:
+
+\vspace{-10pt}
+\begin{itemize}[noitemsep]
+	\item It is very reliable and detects all changes.
+	\item It is quite easy to implement.
+	\item Since the requirements only specify 10 entries per table, this approach is usable.
+	\item Most importantly, it's \textbf{the only way without having to somehow modify the tables to synchronize} (for example without adding triggers or additional tables/columns).
+\end{itemize}
+\vspace{-10pt}
+
+To solve the unavoidable update problem we introduced a synchronization priority system. That means if the database with the highest priority has been changed, we synchronize its state to all other databases (overwriting all their changes). Otherwise we do the same thing for the one with the second highest priority.
+\\\\
+The following code shows the main-loop of our synchronization application:
+
+\vspace{10pt}
+\begin{python}
+while True:
+    for schema in sync_schemas:
+        update_schema(schema)
+
+    time.sleep(sleep_time)
+\end{python}
+\vspace{10pt}
+
+The synchronization process itself works about the following:
+
+\vspace{-10pt}
+\begin{enumerate}
+	\item Fetch all data from all tables in all databases.
+	\item Determine the difference between the current and the previous fetch.
+	\item If there are no conflicts between the differences of all databases, add/delete/update the corresponding rows to the whole DB-cluster.
+	\item If there are conflicts force overwrite all changes with the changes from the database with the highest priority.
+	\item Wait a few seconds, then repeat.
+\end{enumerate}
+
+\subsection{Untreated Problems}
+
+Even though our solution covers most cases quite nicely, there are still a lot of untreated problems. Fully fixing them would be far too time consuming and exceed the assignments requirements. Therefore we left some problems untreated and those are listed here:
+
+\begin{description}
+	
+	\item[Too Much Data] Our approach is suitable for small to medium database. Once there is too much data though, it well become incredibly slow. So huge databases are surely an untreated problem. (Possibly the program could even run out of memory.)
+	
+	\item[Table Modification] Synchronization will not work anymore, if a table is modified, i.e. renamed or columns added/removed.
+	
+	\item[Table/Database Deletion] Our program will probably fail if a table or the whole database would be deleted.
+	%TODO: probably?
+	\item[Connection Lost] Another problem is losing the connection to one database while the 
+	synchronization is happening.
+	
+	\item[Blocking Transactions] When a very long local transaction fully blocks the access to the database and thereby prevents the program to synchronize it, our application will probably throw errors.
+	
+\end{description}
+
+\subsection{Application}
+
+% The list of databases to synchronize is dynamic therefore databases can be removed and added during runtime, which is a huge benefit of this design. TODO: We don't do this anymore ... 
+Our design only contains classes that are sensible for our application. Therefore a part of our application, like the process of synchronizing, are not kept in classes. 
+
+In the following diagram we can see the classes that are included in our application. The design was done by using the KISS principle, so little effort was put into increasing the quality of certain properties like extendability or maintainability. On the other hand, we have focused on certain criterias, which were much more relevant for this exercise, for instance, prevent the user from hardcoding or providing an intuitive and simple-to-use interface. 
+
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{img/application}
+\end{center}
+For simplicity's sake, we used pre defined short characters to indicate database $a$ (psql) and database $b$ (mysql). We can see that \textit{TableSchema} is the base class for all the other schemas. It consists of mapping rules that have to be implemented as functions. Those rules map between the schema and the corresponding class according to the user's implemented mapping method. 
+
+Next, we defined a class for each database ($a$ and $b$ in our case) that can perform basic operations like inserting, querying or deleting certain rows of a given table. The database to perform actions on is uniquely defined by using a predefined url. Additionally, the previously mentioned priority of the database is also defined inside. Each \textit{SyncDB} also has a list of classes (or tables, when expressing with database terms), for which a synchronization is being done. 
+
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{img/syncdb}
+\end{center}
+
+\subsection{Database}
+\label{sec:database_design}
+
+As test data-bases we chose \textit{structurally and semantically heterogeneous} fragments of a library management system. See the image below.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=2.5in]{img/er}
+\end{figure}
+
+Noteworthy is that the individual tables partly have different attributes and different names. Another important point is that \textit{lent} is a \textit{Boolean} which are stored as different data-types in the used DBMs.
+\\\\
+The left data-model will be inserted in \textit{PostgreSQL}, the other one in \textit{MySQL}.
+
+\section{Implementation}
+
+\subsection{Preparation and Installation}
+
+\subsubsection{SQLAlchemy (for Python 3.x)}
+
+First, the SQLAlchemy 0.9.8 version must be downloaded from the official download page \cite{sqlalchemy:download}.
+After extracting, the following command must be done in the extracted directory.
+
+\begin{bash}
+sudo python3 setup.py install
+\end{bash}
+
+sqlalchemy should be usable afterwards. The installation can be checked by starting the Python 3.x interpreter and importing sqlalchemy for simplicity's sake. If we print the version of it, we should see 0.9.8 as the output.
+
+\begin{bash}
+>>> import sqlalchemy
+>>> print(sqlalchemy.__version__)
+0.9.8
+\end{bash}
+
+\subsubsection{PostgreSQL Connections}
+
+psycogp2 is required by SQLAlchemy, but requires the psql client. So the psql client should be installed first. On Mac OS X this can be done by using the brew package manager:
+
+\begin{bash}
+brew install postgresql
+\end{bash}
+
+In Windows we can achieve the same by installing the client that can be downloaded from the official download page \cite{psychopg:download}.
+
+Afterwards every platform should be able to use the following command for installing psycopg2:
+
+\begin{bash}
+sudo pip3 install psycopg2	
+\end{bash}
+
+Now Postgresql connections can be successfully established. 
+
+\subsubsection{MySQL Connections}
+
+Similar to psql one also needs an additional library for connecting to \textit{MySQL} databases, called \textit{MySQLdb} \cite{mysqldb:download}. It can be installed with below command:
+
+\begin{bash}
+sudo pip3 install mysqldb
+\end{bash}
+
+Now MySQL connections can be successfully established.
+
+\section{Testing}
+
+For testing we created the databases as specified in section~\ref{sec:database_design} in a PostgreSQL and a MySQL database. Both were running on our supplied vagrant-machine. Concretely we performed the following sequence of setup steps:
+
+\vspace{10pt}
+\begin{bash}
+vagrant up # start the virtual machine
+# instructions from README
+python sync/create/init\_db.py # insert 15 rows per table
+python sync/synchronization.py # start the middleware
+\end{bash}
+\vspace{10pt}
+
+We then opened connections to both the MySQL and the PostgreSQL-DB, executed different queries and checked their results. Namely we tested the behavior for creation, deletion, updates and changes to multiple tables.
+\\\\
+The following images show the initial state of the databases:
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.35\textwidth}
+	\centering
+		\includegraphics[height=2.5in]{img/initial_psql}
+		\caption{PostgreSQL}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.35\textwidth}
+		\centering
+		\includegraphics[height=2.5in]{img/initial_mysql}
+		\caption{MySQL}
+	\end{subfigure}
+\end{figure}
+
+\subsection{Create}
+
+For testing the insertion of new rows, we added rows on both sides and then checked if they were synchronized to the other side.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+		\includegraphics[height=0.85in]{img/create_psql}
+		\caption{PostgreSQL}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[height=0.85in]{img/create_mysql}
+		\caption{MySQL}
+	\end{subfigure}
+\end{figure}
+\vspace{-10pt}
+
+As expected, both rows were properly synchronized to the other database.
+
+\subsection{Delete}
+
+For testing the deletion of new rows, we deleted rows on both sides and then checked if the deletions were synchronized to the other database.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+		\includegraphics[height=0.85in]{img/delete_psql}
+		\caption{PostgreSQL}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[height=0.85in]{img/delete_mysql}
+		\caption{MySQL}
+	\end{subfigure}
+\end{figure}
+\vspace{-10pt}
+
+As expected, both deletions were properly synchronized to other database.
+
+\subsection{Update}
+
+For testing updating rows, we modified rows on both sides and then checked if the updates were synchronized to the other side.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+		\includegraphics[height=0.85in]{img/update_psql}
+		\caption{PostgreSQL}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[height=0.85in]{img/update_mysql}
+		\caption{MySQL}
+	\end{subfigure}
+\end{figure}
+\vspace{-10pt}
+
+As expected, both updates were properly synchronized to the other database.
+
+\subsection{Multiple Tables}
+
+Additionally we tested modifying multiple tables and then checked if these changes were synchronized to the other side.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+	\centering
+		\includegraphics[height=2in]{img/multi_tables_psql}
+		\caption{PostgreSQL}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[height=2in]{img/multi_tables_mysql}
+		\caption{MySQL}
+	\end{subfigure}
+\end{figure}
+\vspace{-10pt}
+
+As expected, all changed were properly synchronized.
+
+\section{Problems}
+
+\begin{description}
+
+	\item[Import Error] At some time during development we encountered a nasty import error: \lstinline|sync.create.tables is not a valid package name|. 
+	\\\\
+	The reason for that simply was that we had a packaged named \textit{sync} \textbf{and} a file named \textit{sync}. This is not possible in python. Still, it cost us quite some time.
+	
+	\item[Duplicate Primary Key 1] Another very just error was: \lstinline|duplicate primary key entry for id 1| in the following lines of code:
+	
+	\begin{python}
+	for i in (0, 5):
+		session.add(Row(i))\end{python} 
+	\vspace{10pt}
+	
+	We actually still have no clue why that really happened, but the reason for this very odd error seemed to be that 0 is somehow converted to 1 and therefore this error happens. So the solution simply was to start the loop at 1.
+	
+\end{description}
+% import error -> snyc to synchronisation (filename != package name)
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{bibliography}
+
+\end{document}
