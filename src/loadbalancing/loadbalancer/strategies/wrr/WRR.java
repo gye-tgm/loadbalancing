@@ -2,7 +2,6 @@ package loadbalancing.loadbalancer.strategies.wrr;
 
 import loadbalancing.Server;
 import loadbalancing.loadbalancer.ServerReference;
-import loadbalancing.loadbalancer.WeightedServerReference;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 
 import java.util.ArrayList;

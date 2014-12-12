@@ -1,12 +1,20 @@
 package loadbalancing.loadbalancer.strategies.lcf;
 
-import loadbalancing.loadbalancer.WeightedServerReference;
+import loadbalancing.loadbalancer.ServerReference;
+import loadbalancing.loadbalancer.strategies.wrr.WeightedServerReference;
 
 /**
- * Created by gary on 12/12/14.
+ * @author Gary Ye
  */
-public class LCFServerReference extends WeightedServerReference {
-    public LCFServerReference(int a) {
-        super(a);
+public class LCFServerReference extends ServerReference {
+    private int connections;
+
+    public LCFServerReference(String url, int connections) {
+        super(url);
+        this.connections = connections;
+    }
+
+    public int getConnections() {
+        return connections;
     }
 }
