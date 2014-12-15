@@ -1,29 +1,21 @@
 package loadbalancing.loadbalancer.strategies.wrr;
 
-import loadbalancing.Server;
 import loadbalancing.loadbalancer.ServerReference;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
+ * This is a <i>Weighted Round Robing</i> implementation of a load balancing algorithm.
+ *
  * @author Elias Frantar
+ * @version 2014-15-12
  */
 public class WRR implements LoadBalancingStrategy {
 
-    private class WRREntry {
-        Server server;
-        int weight;
-        int assigned;
-
-        public WRREntry(Server server, int weight) {
-            this.server = server;
-            this.weight = weight;
-            this.assigned = 0;
-        }
-    }
-
-    private ArrayList<WRREntry> list;
+    private ArrayList<WeightedServerReference> list;
+    private Map<String, Integer> assigned;
     private int current;
 
     public WRR() {
@@ -31,35 +23,39 @@ public class WRR implements LoadBalancingStrategy {
         current = 0;
     }
 
+    @Override
+    public synchronized ServerReference getNext() {
+        WeightedServerReference server;
 
-    public void register(Server server, int weight) {
-        list.add(new WRREntry(server, weight));
+        // if all servers were assigned with connections according to their weight, flush the `assigned` map
+        if (allFull())
+            clearAssigned();
+
+        /* get the next server with remaining connections */
+        do {
+            current = (current + 1) % list.size();
+            server = list.get(current);
+        } while (assigned.get(server.getUrl()) >= server.getWeight());
+
+        return server;
     }
 
-    @Override
-    public void increment(ServerReference server) {
+    public synchronized void register(ServerReference server)   { list.add((WeightedServerReference) server);   }
+    public synchronized void unregister(ServerReference server) { list.remove((WeightedServerReference) server);}
 
+    public synchronized void increment(ServerReference server) { assigned.put(server.getUrl(), assigned.get(server.getUrl())+1); }
+    public synchronized void decrement(ServerReference server) { assigned.put(server.getUrl(), assigned.get(server.getUrl())-1); }
+
+    private void clearAssigned() {
+        for (String key : assigned.keySet())
+            assigned.put(key, 0);
     }
 
-    @Override
-    public void decrement(ServerReference server) {
-
-    }
-
-    @Override
-    public ServerReference getNext() {
-        return null;
-    }
-
-    @Override
-    public void register(ServerReference server) {
-        WeightedServerReference wrrserver = (WeightedServerReference) server;
-        list.add(new WRREntry(wrrserver, wrrserver.getWeight()));
-    }
-
-    @Override
-    public void unregister(ServerReference server) {
-        list.remove(server);
+    private boolean allFull() {
+        for (WeightedServerReference server : list)
+            if (assigned.get(server.getUrl()) < server.getWeight())
+                return false;
+        return true;
     }
 
 }
