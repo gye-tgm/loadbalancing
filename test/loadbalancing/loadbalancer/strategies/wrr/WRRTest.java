@@ -1,5 +1,7 @@
 package loadbalancing.loadbalancer.strategies.wrr;
 
+import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
+import loadbalancing.loadbalancer.strategies.TestLoadBalancer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class WRRTest {
 
-    private WRR wrr;
+    private LoadBalancingStrategy wrr;
 
     WeightedServerReference s1;
     WeightedServerReference s2;
@@ -26,7 +28,7 @@ public class WRRTest {
         s2 = new WeightedServerReference("S2", 2);
         s3 = new WeightedServerReference("S3", 3);
 
-        wrr = new WRR();
+        wrr = new TestLoadBalancer(new WRR());
         wrr.register(s1);
         wrr.register(s2);
         wrr.register(s3);

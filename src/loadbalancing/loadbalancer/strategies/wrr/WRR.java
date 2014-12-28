@@ -39,7 +39,6 @@ public class WRR implements LoadBalancingStrategy {
             server = list.get(current);
         } while (assigned.get(server.getUrl()) >= server.getWeight());
 
-        increment(server);
         return server;
     }
 
