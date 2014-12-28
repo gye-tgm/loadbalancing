@@ -4,6 +4,7 @@ import loadbalancing.loadbalancer.ServerReference;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +21,8 @@ public class WRR implements LoadBalancingStrategy {
 
     public WRR() {
         list = new ArrayList<>();
-        current = 0;
+        assigned = new HashMap<>();
+        current = -1;
     }
 
     @Override
@@ -37,11 +39,22 @@ public class WRR implements LoadBalancingStrategy {
             server = list.get(current);
         } while (assigned.get(server.getUrl()) >= server.getWeight());
 
+        increment(server);
         return server;
     }
 
-    public synchronized void register(ServerReference server)   { list.add((WeightedServerReference) server);   }
-    public synchronized void unregister(ServerReference server) { list.remove((WeightedServerReference) server);}
+    public synchronized void register(ServerReference server)   {
+        list.add((WeightedServerReference) server);
+        assigned.put(server.getUrl(), 0);
+    }
+    public synchronized void unregister(ServerReference server) {
+        list.remove((WeightedServerReference) server);
+        assigned.remove(server.getUrl());
+
+        /* reset pointer if it is now larger than the list */
+        if (current >= list.size())
+            current = -1;
+    }
 
     public synchronized void increment(ServerReference server) { assigned.put(server.getUrl(), assigned.get(server.getUrl())+1); }
     public synchronized void decrement(ServerReference server) { assigned.put(server.getUrl(), assigned.get(server.getUrl())-1); }
