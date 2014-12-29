@@ -89,7 +89,11 @@
 
 \subsection{Aufgabenstellung}
 
-Es soll ein Load Balancer mit mindestens 2 unterschiedlichen Load-Balancing Methoden (jeweils 7 Punkte) implementiert werden (ähnlich dem PI Beispiel [1]; Lösung zum Teil veraltet [2]). Eine Kombination von mehreren Methoden ist möglich. Die Berechnung bzw. das Service ist frei wählbar!
+Es soll ein Load Balancer mit mindestens 2 unterschiedlichen
+Load-Balancing Methoden (jeweils 7 Punkte) implementiert werden
+(ähnlich dem PI Beispiel [1]; Loesung zum Teil veraltet [2]). Eine
+Kombination von mehreren Methoden ist moeglich. Die Berechnung
+bzw. das Service ist frei waehlbar!
 \\\\
 Folgende Load Balancing Methoden stehen zur Auswahl:
 
@@ -101,32 +105,42 @@ Folgende Load Balancing Methoden stehen zur Auswahl:
 	\item Agent Based Adaptive Balancing / Server Probes
 \end{itemize}
 
-Um die Komplexität zu steigern, soll zusätzlich eine "Session Persistence" (2 Punkte) implementiert werden.
+Um die Komplexitaet zu steigern, soll zusaetzlich eine "Session
+Persistence" (2 Punkte) implementiert werden.
 
 \subsection{Tests}
 
-Die Tests sollen so aufgebaut sein, dass in der Gruppe jedes Mitglied mehrere Server fahren und ein Gruppenmitglied mehrere Anfragen an den Load Balancer stellen. Für die Abnahme wird empfohlen, dass jeder Server eine Ausgabe mit entsprechenden Informationen ausgibt, damit die Verteilung der Anfragen demonstriert werden kann.
+Die Tests sollen so aufgebaut sein, dass in der Gruppe jedes Mitglied
+mehrere Server fahren und ein Gruppenmitglied mehrere Anfragen an den
+Load Balancer stellen. Fuer die Abnahme wird empfohlen, dass jeder
+Server eine Ausgabe mit entsprechenden Informationen ausgibt, damit
+die Verteilung der Anfragen demonstriert werden kann.
 
-\subsection{Modalitäten}
+\subsection{Modalitaeten}
 
-Gruppenarbeit: 2 Personen
-Abgabe: Protokoll mit Designüberlegungen / Umsetzung / Testszenarien, Sourcecode (mit allen notwendigen Bibliotheken), Java-Doc, Jar
-\\\\
-Viel Erfolg!
-
+Gruppenarbeit: 2 Personen Abgabe: Protokoll mit Designueberlegungen /
+Umsetzung / Testszenarien, Sourcecode (mit allen notwendigen
+Bibliotheken), Java-Doc, Jar
 
 \subsection{Quellen}
 
-[1] "Praktische Arbeit 2 zur Vorlesung 'Verteilte Systeme' ETH Zürich, SS 2002", Prof.Dr.B.Plattner, übernommen von Prof.Dr.F.Mattern (http://www.tik.ee.ethz.ch/tik/education/lectures/VS/SS02/Praktikum/aufgabe2.pdf)
+[1] "Praktische Arbeit 2 zur Vorlesung 'Verteilte Systeme' ETH
+Zuerich, SS 2002", Prof.Dr.B.Plattner, Uebernommen von
+Prof.Dr.F.Mattern
+
+(http://www.tik.ee.ethz.ch/tik/education/lectures/VS/SS02/Praktikum/aufgabe2.pdf)
+
 [2] http://www.tik.ee.ethz.ch/education/lectures/VS/SS02/Praktikum/loesung2.zip
 
 \newpage
 
 \section{Effort Estimation and Work Distribution}
 
-The following table compares the estimated with the actually needed amount of time for completing each individual task.
+The following table compares the estimated with the actually needed
+amount of time for completing each individual task.
 
-The estimation is in the second column while the columns that follow are actual values.
+The estimation is in the second column while the columns that follow
+are actual values.
 
 \parskip 12pt
 \begin{tabular} {| l | c | c | c | c |}
@@ -145,37 +159,72 @@ The estimation is in the second column while the columns that follow are actual 
 
 \subsection{Assumptions}
 
-Because of the limited time for exercise, it is not possible to handle all problems. Therefore the following assumptions have been made under which our solution will work:
+Because of the limited time for the present exercise, it is not
+possible to handle all problems. Therefore the following assumptions
+have been made under which our solution will work:
 
 \vspace{-10pt}
 \begin{itemize}
-	\item Connections do not end while the load-balancer is running
-	\item Servers are registered at the load-balancer before and only before startup
-	\item Sessions cannot end
-	\item All connections have the same size/weight/package-length/...
+\item Connections do not end while the load-balancer is running
+\item Servers are registered at the load-balancer before and only
+  before startup
+\item Sessions cannot end
+\item All connections have the same size/weight/package-length/...
 \end{itemize}
 \vspace{-10pt}
 
-Deduced from this assumptions our implementation will have the following functional restrictions:
+Deduced from these assumptions our implementation will have the
+following functional restrictions:
 
 \vspace{-10pt}
 \begin{itemize}
-	\item Additional servers \textit{cannot} be dynamically added during runtime
-	\item Load-balancer will \textit{not} be acknowledged when a connection is closed
-	\item A client which connected to a server once will (session persistence) \textit{always} be reconnected to same server (as long as the load-balancer is up)
-	\item Load will only be balanced depending on \textit{the number of connections} ignoring their length/weight/traffic/...
+\item Additional servers \textit{cannot} be dynamically added during
+  runtime
+\item Load-balancer will \textit{not} be acknowledged when a
+  connection is closed
+\item A client who connected to a server once will (session
+  persistence) \textit{always} be reconnected to same server (as long
+  as the load-balancer is up)
+\item Load will only be balanced depending on \textit{the number of
+    connections}, thus ignoring their length/weight/traffic/...
 \end{itemize}
 \vspace{-10pt}
 
 \subsection{Technologies}
 
+\subsubsection{Remote Procedure Call}
+
+XML RPC is a technology that has already been thoroughly addressed in
+the fourth grade of the IT department. Due to the preexisting
+experience and the simpleness of this technology, we decided to use
+the Xmlrpc library provided by Apache.
+
+Its weakness in the performance, compared to other technologies, e.g.,
+RMI, has not been a concern for us since this exercise is designed to
+teach the different load balancing strategies. 
+
+% Add link to Apache XMLRPC
+
+\subsection{Load Balancing Scheduling Strategies}
+
+From the given list of the scheduling strategies we picked
+Weighted Round Robin and Least Connection First as the to be analyzed
+strategies. 
+
+In the following sections we will, for simplicity, refer to Weighted
+Round Robin and Least Connection First as WRR and LCF respectively.
+
+
+
+\subsubsection{Weighted Round Robin}
+
+
+
+\subsubsection{Least Connection First}
+
 \subsection{Software Design}
 
 \section{Ocurred Problems}
-
-
-\section{Ocurred Problems}
-
 
 \nocite{*}
 \bibliographystyle{plain}
