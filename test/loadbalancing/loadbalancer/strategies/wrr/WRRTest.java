@@ -18,15 +18,15 @@ public class WRRTest {
 
     private LoadBalancingStrategy wrr;
 
-    WeightedServerReference s1;
-    WeightedServerReference s2;
-    WeightedServerReference s3;
+    WeightedServerReference s1, s2, s3, s4, s5;
 
     @Before
     public void setUp() throws Exception {
         s1 = new WeightedServerReference("S1", 1);
         s2 = new WeightedServerReference("S2", 2);
         s3 = new WeightedServerReference("S3", 3);
+        s4 = new WeightedServerReference("S4", 4);
+        s5 = new WeightedServerReference("S5", 5);
 
         wrr = new TestLoadBalancer(new WRR());
         wrr.register(s1);
@@ -51,8 +51,6 @@ public class WRRTest {
         assertEquals(s2, wrr.getNext());
 
         /* add additional servers */
-        WeightedServerReference s4 = new WeightedServerReference("S4", 4);
-        WeightedServerReference s5 = new WeightedServerReference("S5", 5);
         wrr.register(s4);
         wrr.register(s5);
 
@@ -71,7 +69,6 @@ public class WRRTest {
 
     @Test
     public void testWeightingWInsertsRemoves() {
-        WeightedServerReference s4 = new WeightedServerReference("S4", 4);
         WeightedServerReference[] expecteds = {s1, s2, s3, s2, s3, s4, s3, s4, s4, s1};
 
         /* standard order */
@@ -79,7 +76,6 @@ public class WRRTest {
             assertEquals(expecteds[i], wrr.getNext());
 
         /* add a new server */
-        s4 = new WeightedServerReference("S4", 4);
         wrr.register(s4);
 
         for (int i = 5; i < 9; i++)
