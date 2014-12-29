@@ -1,39 +1,58 @@
 package loadbalancing.slave;
 
-import loadbalancing.Server;
+import loadbalancing.IServer;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServer;
+import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
 import org.apache.xmlrpc.webserver.WebServer;
 
 import java.io.IOException;
 
 /**
+ * A slave server is the end node that will actually process the request.
+ *
  * @author Gary Ye
  */
-public class SlaveServer extends Thread implements Server {
+public class SlaveServer extends Thread implements IServer {
     private int port;
 
     public SlaveServer() {
+        port = 100;
     }
-
+    /**
+     * Initializes a new slave server object with a given port number.
+     *
+     * @param port the port number
+     */
     public SlaveServer(int port) {
         this.port = port;
     }
 
     @Override
     public void run() {
-        System.out.println("Attempting to start XML-RPC Server...");
+        // http://ws.apache.org/xmlrpc/server.html
         WebServer webServer = new WebServer(port);
 
-        PropertyHandlerMapping mapping = new PropertyHandlerMapping();
+        XmlRpcServer xmlRpcServer = webServer.getXmlRpcServer();
+
+        PropertyHandlerMapping phm = new PropertyHandlerMapping();
         try {
-            mapping.addHandler("lb", new SlaveServer().getClass());
-            XmlRpcServer server = webServer.getXmlRpcServer();
-            server.setHandlerMapping(mapping);
-            webServer.start();
-        } catch (XmlRpcException | IOException e) {
+            phm.addHandler("Server", SlaveServer.class);
+        } catch (XmlRpcException e) {
             e.printStackTrace();
+        }
+
+        xmlRpcServer.setHandlerMapping(phm);
+
+        XmlRpcServerConfigImpl serverConfig = (XmlRpcServerConfigImpl) xmlRpcServer.getConfig();
+        serverConfig.setEnabledForExtensions(true);
+        serverConfig.setContentLengthOptional(false);
+
+        try {
+            webServer.start();
+        } catch (IOException e) {
+            System.out.println("WebServer could not be started!");
         }
     }
 
@@ -43,7 +62,6 @@ public class SlaveServer extends Thread implements Server {
     }
 
     public static void main(String[] args) {
-        // Args: Port numbers :-)
         for (String arg : args) new SlaveServer(Integer.parseInt(arg)).start();
     }
 }

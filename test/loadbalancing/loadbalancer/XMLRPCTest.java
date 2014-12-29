@@ -8,7 +8,7 @@ public class XMLRPCTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        serverReference = new ServerReference("http://localhost:5000/RPC2");
+        serverReference = new ServerReference("http://localhost:5000/xmlrpc");
         slaveServer = new SlaveServer(5000);
     }
 
@@ -19,8 +19,10 @@ public class XMLRPCTest {
     }
 
     @org.junit.Test
-    public void testCall() throws Exception {
+    public void testServerReferenceToSlaveServerCall() throws Exception {
         slaveServer.start();
+        Thread.sleep(1000); // Give the web server some time to start
         System.out.println(serverReference.call("Hey!"));
     }
+
 }

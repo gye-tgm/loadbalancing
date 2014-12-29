@@ -1,19 +1,17 @@
 package loadbalancing.loadbalancer;
 
-import loadbalancing.Server;
-import org.apache.xmlrpc.*;
+import loadbalancing.IServer;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Gary Ye
  */
-public class ServerReference implements Server {
+public class ServerReference implements IServer {
     private String url;
 
     public ServerReference(String url) {
@@ -26,13 +24,13 @@ public class ServerReference implements Server {
 
     @Override
     public String call(String request) {
-        XmlRpcClient server = new XmlRpcClient();
-        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+        // http://ws.apache.org/xmlrpc/client.html
         try {
-            // config.setServerURL(new URL("http://localhost:12345/RPC2"));
+            XmlRpcClient client = new XmlRpcClient();
+            XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(url));
-            server.setConfig(config);
-            return (String) server.execute("lb.call", new Object[]{request});
+            client.setConfig(config);
+            return (String) client.execute("Server.call", new Object[]{request});
         } catch (MalformedURLException | XmlRpcException e) {
             e.printStackTrace();
         }
