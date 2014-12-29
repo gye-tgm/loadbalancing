@@ -24,13 +24,13 @@ public class ServerReference implements IServer {
 
     @Override
     public String call(String request) {
-        XmlRpcClient server = new XmlRpcClient();
-        XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+        // http://ws.apache.org/xmlrpc/client.html
         try {
-            // config.setServerURL(new URL("http://localhost:12345/RPC2"));
+            XmlRpcClient client = new XmlRpcClient();
+            XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
             config.setServerURL(new URL(url));
-            server.setConfig(config);
-            return (String) server.execute("lb.call", new Object[]{request});
+            client.setConfig(config);
+            return (String) client.execute("Server.call", new Object[]{request});
         } catch (MalformedURLException | XmlRpcException e) {
             e.printStackTrace();
         }
