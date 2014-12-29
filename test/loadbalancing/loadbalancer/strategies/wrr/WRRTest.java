@@ -105,4 +105,9 @@ public class WRRTest {
             assertEquals(expecteds[i], wrr.getNext());
     }
 
+    @Test
+    public void testNextEmpty() {
+        wrr = new WRR();
+        assertEquals(null, wrr.getNext());
+    }
 }

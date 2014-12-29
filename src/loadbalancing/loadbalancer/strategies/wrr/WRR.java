@@ -27,6 +27,9 @@ public class WRR implements LoadBalancingStrategy {
 
     @Override
     public synchronized ServerReference getNext() {
+        if (list.isEmpty())
+            return null;
+
         WeightedServerReference server;
 
         // if all servers were assigned with connections according to their weight, flush the `assigned` map

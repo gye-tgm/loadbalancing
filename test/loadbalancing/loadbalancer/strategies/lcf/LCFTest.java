@@ -109,4 +109,10 @@ public class LCFTest {
         assertEquals(s4, lcf.getNext());
     }
 
+    @Test
+    public void testNextEmpty() {
+        lcf = new LCF();
+        assertEquals(null, lcf.getNext());
+    }
+
 }
