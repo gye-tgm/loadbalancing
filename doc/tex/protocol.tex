@@ -207,24 +207,54 @@ teach the different load balancing strategies.
 
 \subsection{Load Balancing Scheduling Strategies}
 
-From the given list of the scheduling strategies we picked
-Weighted Round Robin and Least Connection First as the to be analyzed
-strategies. 
+From the given list of the scheduling strategies we picked Weighted
+Round Robin and Least Connection First as the strategies to be
+analyzed.
 
-In the following sections we will, for simplicity, refer to Weighted
-Round Robin and Least Connection First as WRR and LCF respectively.
+In the following sections we will, for simplicity's sake, abbreviate
+Weighted Round Robin and Least Connection First as WRR and LCF
+respectively.
 
-
+Since the scheduling strategies that can be found in the Internet are
+very abstract, we will also describe how we concretely applied them in
+the use case of our application. 
 
 \subsubsection{Weighted Round Robin}
 
-
+% TODO: Described WRR
 
 \subsubsection{Least Connection First}
 
+The LCF strategy can be explained very simply. For each server
+instance $i$ we assign a number $c_i$, which denotes the number of
+active/open connections on server $i$. Whenever the load balancer
+receives a new request, it searches for the server with the minimum
+$c_i$ and picks it as the server that should process the new
+request. It subsequently increments $c_i$ by $1$. 
+
+Denote $n$ as the number of servers that the load balancer
+maintains. A simple algorithm iterates through all the given servers
+and picks the server with the minimum $c_i$, which results in a linear
+$O(n)$ algorithm. This might work well in practice, since $n$ cannot
+range to more than 3 figures in reality (except large companies like
+Google, NSA), but it is still theoretically slow. 
+
+We can improve the searching step to $O(\log n)$ by using a subtle
+data structure like a Balanced Binary Search Tree. Probably the
+easiest BBST data structure to implement is a treap, which relies its
+logarithmic height on the randomness of the priority keys.
+
 \subsection{Software Design}
 
+\section{Testing}
+
+\subsection{Unit Testing}
+
+\subsection{Manual Testing}
+
 \section{Ocurred Problems}
+
+
 
 \nocite{*}
 \bibliographystyle{plain}
