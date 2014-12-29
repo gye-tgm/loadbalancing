@@ -1,19 +1,17 @@
 package loadbalancing.loadbalancer;
 
-import loadbalancing.Server;
-import org.apache.xmlrpc.*;
+import loadbalancing.IServer;
+import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Gary Ye
  */
-public class ServerReference implements Server {
+public class ServerReference implements IServer {
     private String url;
 
     public ServerReference(String url) {
