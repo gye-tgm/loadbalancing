@@ -206,7 +206,7 @@ teach the different load balancing strategies.
 % Add link to Apache XMLRPC
 
 \subsection{Load Balancing Scheduling Strategies}
-
+\label{subsec:strategy}
 From the given list of the scheduling strategies we picked Weighted
 Round Robin and Least Connection First as the strategies to be
 analyzed.
@@ -246,15 +246,30 @@ logarithmic height on the randomness of the priority keys.
 
 \subsection{Software Design}
 
+% TODO: Add UML diagram
+
 \section{Testing}
 
 \subsection{Unit Testing}
 
+The following JUnit report shows the unit tests that have been
+performed on our implementation. 
+
+The strategies, which were mentioned in \ref{subsec:strategy}, were
+tested thoroughly with virtually 100 percentage code coverage.
+
 \subsection{Manual Testing}
 
-\section{Ocurred Problems}
+% TODO: Add text + screenshots
 
+\section{Occurred Problems}
 
+\subsection{XML RPC}
+
+When making a remote procedure call on a class that has no default
+constructor an Instantiation Exception will be thrown from the server.
+
+This has been a nasty bug for an undefined time. 
 
 \nocite{*}
 \bibliographystyle{plain}
