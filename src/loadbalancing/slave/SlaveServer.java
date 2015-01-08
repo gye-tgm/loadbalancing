@@ -1,6 +1,7 @@
 package loadbalancing.slave;
 
 import loadbalancing.IServer;
+import loadbalancing.Request;
 import org.apache.xmlrpc.WebServer;
 
 /**
@@ -34,7 +35,7 @@ public class SlaveServer extends Thread implements IServer {
 
     @Override
     public String call(String request) throws Exception {
-        return "Response (" + port + "): Your request was '" + request + "'.";
+        return "Response (" + port + "): Your request was '" + new Request(request).getBody() + "'."; // we only want the request body
     }
 
     public static void main(String[] args) {
