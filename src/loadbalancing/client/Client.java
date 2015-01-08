@@ -20,20 +20,13 @@ public class Client {
         this.url = url;
     }
 
-    public String call(String request) {
-        // http://ws.apache.org/xmlrpc/client.html
-        try {
-            XmlRpcClient client = new XmlRpcClient(url);
+    public String call(String request) throws Exception {
+        XmlRpcClient client = new XmlRpcClient(url);
 
-            Vector v = new Vector();
-            v.add(request);
+        Vector v = new Vector();
+        v.add(request);
 
-            return (String) client.execute("Server.call", v);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return (String) client.execute("Server.call", v);
     }
 
     public static void main(String[] args) {
@@ -42,6 +35,10 @@ public class Client {
             System.exit(1);
         }
 
-        System.out.println(new Client(args[0]).call(args[1]));
+        try {
+            System.out.println(new Client(args[0]).call(args[1]));
+        } catch (Exception e) {
+            System.out.println("Connecting to the server failed: " + e.getMessage());
+        }
     }
 }

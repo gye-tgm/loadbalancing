@@ -9,31 +9,30 @@ import java.util.Vector;
  */
 public class ServerReference implements IServer {
     private String url;
+    private int failures;
 
     public ServerReference(String url) {
         this.url = url;
+        this.failures = 0;
     }
 
     public String getUrl() {
         return url;
     }
+    public int getFailures() { return failures; }
+    public void setFailures(int failures) { this.failures = failures; }
 
     @Override
-    public String call(String request) {
-        // http://ws.apache.org/xmlrpc/client.html
-        try {
-            XmlRpcClient client = new XmlRpcClient(url);
+    public String call(String request) throws Exception {
+        XmlRpcClient client = new XmlRpcClient(url);
 
-            Vector v = new Vector();
-            v.add(request);
+        Vector v = new Vector();
+        v.add(request);
 
-            return (String) client.execute("Server.call", v);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        return (String) client.execute("Server.call", v);
     }
+
+    /* `equals()` and `hashCode()` are necessary for proper comparison */
 
     @Override
     public boolean equals(Object o) {
@@ -51,4 +50,5 @@ public class ServerReference implements IServer {
     public int hashCode() {
         return url != null ? url.hashCode() : 0;
     }
+
 }

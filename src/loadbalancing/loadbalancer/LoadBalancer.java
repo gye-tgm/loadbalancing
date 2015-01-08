@@ -19,6 +19,8 @@ import java.io.IOException;
  * @version 2014/12/29
  */
 public class LoadBalancer extends Thread implements IServer {
+    private static final int MAX_FAILUES = 2;
+
     private LoadBalancingStrategy strategy;
     private int port = 5000;
 
@@ -32,10 +34,27 @@ public class LoadBalancer extends Thread implements IServer {
     }
 
     @Override
-    public synchronized String call(String request) {
-        ServerReference serverReference = strategy.getNext();
-        strategy.increment(serverReference);
-        return serverReference.call(request);
+    public synchronized String call(String request) throws Exception {
+        ServerReference serverReference;
+
+        while ((serverReference = strategy.getNext()) != null) { // try as long as we find a working server
+            try {
+                strategy.increment(serverReference);
+                String result = serverReference.call(request);
+
+                serverReference.setFailures(0); // the last call was successful
+                return result;
+            } catch (Exception e) { // if the request failed
+                int failures = serverReference.getFailures();
+
+                if (failures >= MAX_FAILUES) // if the server failed too often remove it permanently
+                    strategy.unregister(serverReference);
+                else
+                    serverReference.setFailures(failures + 1);
+            }
+        }
+
+        return "Request could not be processed :( All servers are down ..."; // error if there are no servers available
     }
 
     @Override
