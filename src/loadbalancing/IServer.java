@@ -4,5 +4,5 @@ package loadbalancing;
  *
  */
 public interface IServer {
-    public String call(String request);
+    public String call(String request) throws Exception;
 }

@@ -1,22 +1,22 @@
 package loadbalancing.slave;
 
+import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
+import loadbalancing.Request;
 import org.apache.xmlrpc.WebServer;
 
 /**
  * A slave server is the end node that will actually process the request.
  *
  * @author Gary Ye
+ * @author Elias Frantar
+ * @version 2015-01-08
  */
 public class SlaveServer extends Thread implements IServer {
     private int port;
 
-    public SlaveServer() {
-        port = 100;
-    }
     /**
      * Initializes a new slave server object with a given port number.
-     *
      * @param port the port number
      */
     public SlaveServer(int port) {
@@ -25,19 +25,30 @@ public class SlaveServer extends Thread implements IServer {
 
     @Override
     public void run() {
-        WebServer webServer = new WebServer(port);
-        webServer.addHandler("Server", this);
-        webServer.start();
+        try {
+            WebServer webServer = new WebServer(port);
+            webServer.addHandler("Server", this);
+            webServer.start();
+        } catch (Exception e) {
+            System.out.print("Starting the server failed: " + e.getMessage());
+        }
     }
 
     @Override
-    public String call(String request) {
-        return "You requested with " + request + " I am with port " + port;
+    public String call(String request) throws Exception {
+        String content;
+        try {
+            content = new Request(request).getBody(); // deserialize the request to get the requestor
+        } catch (DeserializationException e) {
+            return "Corrupted request ...";
+        }
+
+        return "Response (" + port + "): Your request was '" + content + "'."; // we only want the request body
     }
 
     public static void main(String[] args) {
         for (String arg : args) {
-            System.out.println("SlaveServer with port + " + arg + " started\n");
+            System.out.println("SlaveServer with port " + arg + " started");
             new SlaveServer(Integer.parseInt(arg)).start();
         }
     }
