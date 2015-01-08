@@ -2,6 +2,13 @@ package loadbalancing.loadbalancer.strategies;
 
 import loadbalancing.loadbalancer.ServerReference;
 
+/**
+ * A simple dummy-load-balancer that automatically increments the servers after calls to {@link #getNext()}.<br>
+ * <b>Only meant for testing purposes!</b>
+ *
+ * @author Elias Frantar
+ * @version 2015-01-08
+ */
 public class TestLoadBalancer implements LoadBalancingStrategy {
     private LoadBalancingStrategy strategy;
 
