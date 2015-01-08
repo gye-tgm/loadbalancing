@@ -1,11 +1,11 @@
 package loadbalancing.client;
 
+import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Vector;
 
 /**
  * This class represents the client who will make requests to the
@@ -23,12 +23,13 @@ public class Client {
     public String call(String request) {
         // http://ws.apache.org/xmlrpc/client.html
         try {
-            XmlRpcClient client = new XmlRpcClient();
-            XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(url));
-            client.setConfig(config);
-            return (String) client.execute("Server.call", new Object[]{request});
-        } catch (MalformedURLException | XmlRpcException e) {
+            XmlRpcClient client = new XmlRpcClient(url);
+
+            Vector v = new Vector();
+            v.add(request);
+
+            return (String) client.execute("Server.call", v);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

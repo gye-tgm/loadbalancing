@@ -4,11 +4,8 @@ import loadbalancing.IServer;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 import loadbalancing.loadbalancer.strategies.lcf.LCF;
 import loadbalancing.loadbalancer.strategies.lcf.LCFServerReference;
+import org.apache.xmlrpc.WebServer;
 import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.server.PropertyHandlerMapping;
-import org.apache.xmlrpc.server.XmlRpcServer;
-import org.apache.xmlrpc.server.XmlRpcServerConfigImpl;
-import org.apache.xmlrpc.webserver.WebServer;
 
 import java.io.IOException;
 
@@ -43,29 +40,9 @@ public class LoadBalancer extends Thread implements IServer {
 
     @Override
     public void run() {
-        // http://ws.apache.org/xmlrpc/server.html
         WebServer webServer = new WebServer(port);
-
-        XmlRpcServer xmlRpcServer = webServer.getXmlRpcServer();
-
-        PropertyHandlerMapping phm = new PropertyHandlerMapping();
-        try {
-            phm.addHandler("Server", LoadBalancer.class);
-        } catch (XmlRpcException e) {
-            e.printStackTrace();
-        }
-
-        xmlRpcServer.setHandlerMapping(phm);
-
-        XmlRpcServerConfigImpl serverConfig = (XmlRpcServerConfigImpl) xmlRpcServer.getConfig();
-        serverConfig.setEnabledForExtensions(true);
-        serverConfig.setContentLengthOptional(false);
-
-        try {
-            webServer.start();
-        } catch (IOException e) {
-            System.out.println("WebServer could not be started!");
-        }
+        webServer.addHandler("Server", this);
+        webServer.start();
     }
 
     /**

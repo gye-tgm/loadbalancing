@@ -1,12 +1,8 @@
 package loadbalancing.loadbalancer;
 
 import loadbalancing.IServer;
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.apache.xmlrpc.XmlRpcClient;
+import java.util.Vector;
 
 /**
  * @author Gary Ye
@@ -26,14 +22,16 @@ public class ServerReference implements IServer {
     public String call(String request) {
         // http://ws.apache.org/xmlrpc/client.html
         try {
-            XmlRpcClient client = new XmlRpcClient();
-            XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-            config.setServerURL(new URL(url));
-            client.setConfig(config);
-            return (String) client.execute("Server.call", new Object[]{request});
-        } catch (MalformedURLException | XmlRpcException e) {
+            XmlRpcClient client = new XmlRpcClient(url);
+
+            Vector v = new Vector();
+            v.add(request);
+
+            return (String) client.execute("Server.call", v);
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
