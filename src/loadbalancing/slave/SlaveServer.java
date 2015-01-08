@@ -6,7 +6,7 @@ import loadbalancing.Request;
 import org.apache.xmlrpc.WebServer;
 
 /**
- * A slave server is the end node that will actually process the request.
+ * A slave server is the end node that will actually process requests and send responses.
  *
  * @author Gary Ye
  * @author Elias Frantar

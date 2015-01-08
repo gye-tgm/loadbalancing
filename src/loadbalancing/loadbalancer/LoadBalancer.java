@@ -24,16 +24,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is a load balancer implementation that uses a specific load
- * balancing strategy for balancing the traffic load by assigning the given
- * requests to different servers.
+ * This class is a load balancer implementation that uses a specific load balancing strategy for balancing the traffic
+ * load by assigning the given requests to different servers.
  *
  * @author Gary Ye
  * @author Elias Frantar
  * @version 2015-01-08
  */
 public class LoadBalancer extends Thread implements IServer {
-    private static final int MAX_FAILUES = 2;
+
+    private static final int MAX_FAILUES = 2; // maximum number of failures before unregistering
 
     private LoadBalancingStrategy strategy;
     private Map<String, ServerReference> sessionTable;
@@ -104,13 +104,15 @@ public class LoadBalancer extends Thread implements IServer {
 
     /**
      * Registers a new server to the load balancer by passing the reference of the server.
-     *
      * @param serverReference the reference of the server that should be registered
      */
     public void register(ServerReference serverReference) {
         strategy.register(serverReference);
     }
 
+    /**
+     * Prints the usage of this class' {@link #main(String[])} method
+     */
     public static void usage() {
         System.out.println("usage: java loadbalancing.loadbalancer.LoadBalancer <config-file>");
     }
@@ -120,6 +122,7 @@ public class LoadBalancer extends Thread implements IServer {
             usage();
             return;
         }
+
         LoadBalancer loadBalancer = null;
         try {
             File file = new File(args[0]);
@@ -129,8 +132,9 @@ public class LoadBalancer extends Thread implements IServer {
         } catch (StrategyNotFoundException e) {
             System.err.println("Strategy not found! Choose from the following list: WRR, LCF");
         }
+
         loadBalancer.start();
-        System.out.println("Load Balancer started...\n");
+        System.out.println("Load Balancer started... \n");
     }
 
     /**
@@ -180,6 +184,9 @@ public class LoadBalancer extends Thread implements IServer {
         return loadBalancer;
     }
 
-    static class StrategyNotFoundException extends Exception {
-    }
+    /**
+     * A simple Exception thrown when a requested strategy was not found
+     */
+    static class StrategyNotFoundException extends Exception {}
+
 }

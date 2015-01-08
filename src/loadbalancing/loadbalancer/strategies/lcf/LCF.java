@@ -6,11 +6,17 @@ import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 import java.util.ArrayList;
 
 /**
+ * A <i>Least Connection First</i> implementation of a load balancing algorithm
  *
+ * @author Gary Ye
+ * @version 2014-13-12
  */
 public class LCF implements LoadBalancingStrategy {
     ArrayList<LCFServerReference> list;
 
+    /**
+     * Creates a new <i>Least Connection First</i> load balancing strategy
+     */
     public LCF() {
         list = new ArrayList<>();
     }

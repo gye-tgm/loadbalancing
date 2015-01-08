@@ -28,7 +28,7 @@ public class Request {
 
     /**
      * Creates a new request with the given parameters
-     * <i>Note:</i> ':' are not allowed an will be stripped
+     * <p><i>Note:</i> ':' are not allowed an will be stripped</p>
      *
      * @param requestor the name of the requestor
      * @param body the body of the request

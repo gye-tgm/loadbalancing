@@ -2,27 +2,37 @@ package loadbalancing.client;
 
 import loadbalancing.Request;
 import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Vector;
 
 /**
- * This class represents the client who will make requests to the
- * load balancer.
+ * This class represents the client who will make requests to the load balancer.
  *
  * @author Gary Ye
+ * @author Elias Frantar
+ * @version 2015-01-08
  */
 public class Client {
     private String name;
     private String url;
 
+    /**
+     * Creates a new client with the specified parameters
+     * @param name the name of the client
+     * @param url the url to request to
+     */
     public Client(String name, String url) {
         this.name = name;
         this.url = url;
     }
 
+    /**
+     * Sends a request to the previously configured URL
+     *
+     * @param request the request to send
+     * @return the response to this request
+     * @throws Exception thrown if requesting failed
+     */
     public String call(String request) throws Exception {
         XmlRpcClient client = new XmlRpcClient(url);
 

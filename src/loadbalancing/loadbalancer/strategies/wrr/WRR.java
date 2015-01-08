@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This is a <i>Weighted Round Robing</i> implementation of a load balancing algorithm.
+ * A <i>Weighted Round Robin</i> implementation of a load balancing algorithm
  *
  * @author Elias Frantar
  * @version 2014-15-12
@@ -19,6 +19,9 @@ public class WRR implements LoadBalancingStrategy {
     private Map<String, Integer> assigned;
     private int current;
 
+    /**
+     * Creates a new <i>Weighted Round Robin</i> load balancing strategy
+     */
     public WRR() {
         list = new ArrayList<>();
         assigned = new HashMap<>();
