@@ -62,6 +62,9 @@ public class SlaveServer extends Thread implements IServer {
     }
 
     public static void main(String[] args) {
-        for (String arg : args) new SlaveServer(Integer.parseInt(arg)).start();
+        for (String arg : args) {
+            System.out.println("SlaveServer with port + " + arg + " started\n");
+            new SlaveServer(Integer.parseInt(arg)).start();
+        }
     }
 }

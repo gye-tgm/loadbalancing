@@ -3,6 +3,7 @@ package loadbalancing.loadbalancer;
 import loadbalancing.IServer;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
 import loadbalancing.loadbalancer.strategies.lcf.LCF;
+import loadbalancing.loadbalancer.strategies.lcf.LCFServerReference;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServer;
@@ -80,7 +81,7 @@ public class LoadBalancer extends Thread implements IServer {
         LoadBalancer loadBalancer = new LoadBalancer(new LCF());
 
         // TODO: get the slave servers from args[]
-        loadBalancer.register(new ServerReference(""));
+        loadBalancer.register(new LCFServerReference("http://localhost:5050/xmlrpc"));
 
         loadBalancer.start();
     }
