@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<loadbalancing>
+  <strategyname value="LCF"/>
+  <slave>
+    <url>https://localhost:8080/RPC2</url>
+    <weight>30</weight>
+  </slave>
+  <slave>
+    <url>https://localhost:8081/RPC2</url>
+    <weight>58</weight>
+  </slave>
+</loadbalancing>

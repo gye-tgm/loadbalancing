@@ -32,19 +32,30 @@ import java.util.Map;
  * @version 2015-01-08
  */
 public class LoadBalancer extends Thread implements IServer {
-
-    private static final int MAX_FAILUES = 2; // maximum number of failures before unregistering
+    
+    private static final int MAX_FAILUES = 2;
+    private static final int DEFAULT_PORT = 5000;
 
     private LoadBalancingStrategy strategy;
     private Map<String, ServerReference> sessionTable;
     private int port = 5000;
 
     /**
-     * Initializes a new LoadBalancer object with the given load balancing strategy.
+     * Initializes a new LoadBalancer object with the given load balancing strategy
      * @param strategy the load balancing strategy to apply during runtime
      */
     public LoadBalancer(LoadBalancingStrategy strategy) {
+        this(strategy, DEFAULT_PORT);
+    }
+
+    /**
+     *Initializes a new LoadBalancer object with the given load balancing strategy and port
+     * @param strategy the load balancing strategy to apply during runtime
+     * @param port the port to start the load-balancer on
+     */
+    public LoadBalancer(LoadBalancingStrategy strategy, int port) {
         this.strategy = strategy;
+        this.port = port;
         sessionTable = new HashMap<>();
     }
 
@@ -114,27 +125,28 @@ public class LoadBalancer extends Thread implements IServer {
      * Prints the usage of this class' {@link #main(String[])} method
      */
     public static void usage() {
-        System.out.println("usage: java loadbalancing.loadbalancer.LoadBalancer <config-file>");
+        System.out.println("usage: java loadbalancing.loadbalancer.LoadBalancer <port> <config-file>");
     }
 
     public static void main(String[] args){
-        if (args.length != 1) {
+        if (args.length != 2) {
             usage();
             return;
         }
 
         LoadBalancer loadBalancer = null;
         try {
-            File file = new File(args[0]);
+            File file = new File(args[1]);
             loadBalancer = readXML(file);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            System.err.printf("Error occurred while reading the file: %s\n", args[0]);
+            System.err.printf("Error occurred while reading the file: %s\n", args[1]);
         } catch (StrategyNotFoundException e) {
             System.err.println("Strategy not found! Choose from the following list: WRR, LCF");
         }
+        loadBalancer.setPort(Integer.parseInt(args[0]));
 
         loadBalancer.start();
-        System.out.println("Load Balancer started... \n");
+        System.out.println("Load Balancer started ...");
     }
 
     /**
@@ -183,6 +195,9 @@ public class LoadBalancer extends Thread implements IServer {
 
         return loadBalancer;
     }
+
+    /* Getters */
+    public void setPort(int port) { this.port = port; }
 
     /**
      * A simple Exception thrown when a requested strategy was not found
