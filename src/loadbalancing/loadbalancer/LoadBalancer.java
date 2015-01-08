@@ -1,5 +1,6 @@
 package loadbalancing.loadbalancer;
 
+import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
 import loadbalancing.Request;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
@@ -40,7 +41,13 @@ public class LoadBalancer extends Thread implements IServer {
     @Override
     public synchronized String call(String request) throws Exception {
         ServerReference serverReference;
-        String requestor = new Request(request).getRequestor(); // deserialize the request to get the requestor
+        String requestor;
+
+        try {
+            requestor = new Request(request).getRequestor(); // deserialize the request to get the requestor
+        } catch (DeserializationException e) {
+            return "Corrupted request ...";
+        }
 
         /* if there is an ongoing session use it */
         if (sessionTable.containsKey(requestor))
