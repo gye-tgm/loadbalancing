@@ -1,6 +1,7 @@
 package loadbalancing.client;
 
 import loadbalancing.Request;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcClient;
 
 import java.util.Vector;
@@ -13,6 +14,8 @@ import java.util.Vector;
  * @version 2015-01-08
  */
 public class Client {
+    private static Logger log = Logger.getLogger(Client.class.getName());
+
     private String name;
     private String url;
 
@@ -39,6 +42,7 @@ public class Client {
         Vector v = new Vector();
         v.add(new Request(name, request).serialize()); // we want to send structured requests
 
+        log.debug(name + ": Sending request: '" + request + "'");
         return (String) client.execute("Server.call", v);
     }
 

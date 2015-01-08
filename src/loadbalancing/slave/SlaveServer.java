@@ -3,6 +3,7 @@ package loadbalancing.slave;
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
 import loadbalancing.Request;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.WebServer;
 
 /**
@@ -13,6 +14,8 @@ import org.apache.xmlrpc.WebServer;
  * @version 2015-01-08
  */
 public class SlaveServer extends Thread implements IServer {
+    private static Logger log = Logger.getLogger(SlaveServer.class.getName());
+
     private int port;
 
     /**
@@ -36,6 +39,8 @@ public class SlaveServer extends Thread implements IServer {
 
     @Override
     public String call(String request) throws Exception {
+        log.info("Received request: " + request);
+
         String content;
         try {
             content = new Request(request).getBody(); // deserialize the request to get the requestor

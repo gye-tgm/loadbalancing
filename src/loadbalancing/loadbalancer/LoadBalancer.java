@@ -8,6 +8,7 @@ import loadbalancing.loadbalancer.strategies.lcf.LCF;
 import loadbalancing.loadbalancer.strategies.lcf.LCFServerReference;
 import loadbalancing.loadbalancer.strategies.wrr.WRR;
 import loadbalancing.loadbalancer.strategies.wrr.WeightedServerReference;
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.WebServer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -32,7 +33,9 @@ import java.util.Map;
  * @version 2015-01-08
  */
 public class LoadBalancer extends Thread implements IServer {
-    
+
+    private static Logger log = Logger.getLogger(LoadBalancer.class.getName());
+
     private static final int MAX_FAILUES = 2;
     private static final int DEFAULT_PORT = 5000;
 
@@ -71,14 +74,17 @@ public class LoadBalancer extends Thread implements IServer {
         }
 
         /* if there is an ongoing session use it */
-        if (sessionTable.containsKey(requestor))
+        if (sessionTable.containsKey(requestor)) {
+            log.info("There is an ongoing session for: " + requestor);
             serverReference = sessionTable.get(requestor);
+        }
         else
             serverReference = strategy.getNext();
 
         while (serverReference != null) { // try until we find a working server
             try {
                 strategy.increment(serverReference);
+                log.debug("Forwarding request to: " + serverReference.getUrl());
                 String result = serverReference.call(request);
 
                 serverReference.setFailures(0); // the last call was successful
@@ -86,6 +92,8 @@ public class LoadBalancer extends Thread implements IServer {
 
                 return result;
             } catch (Exception e) { // if the request failed
+                log.info("Forwarding request failed ... Trying again ...");
+
                 int failures = serverReference.getFailures();
 
                 if (failures >= MAX_FAILUES) { // if the server failed too often remove it permanently
@@ -95,6 +103,8 @@ public class LoadBalancer extends Thread implements IServer {
                     for (String key : sessionTable.keySet())
                         if (sessionTable.get(key).equals(serverReference))
                             sessionTable.remove(key);
+
+                    log.info("Unregistered server: " + serverReference.getUrl());
                 }
                 else
                     serverReference.setFailures(failures + 1);
@@ -119,6 +129,7 @@ public class LoadBalancer extends Thread implements IServer {
      */
     public void register(ServerReference serverReference) {
         strategy.register(serverReference);
+        log.info("Registered new server: " + serverReference.getUrl());
     }
 
     /**
