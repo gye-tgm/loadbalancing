@@ -4,10 +4,6 @@ import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
 import loadbalancing.Request;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
-import loadbalancing.loadbalancer.strategies.lcf.LCF;
-import loadbalancing.loadbalancer.strategies.lcf.LCFServerReference;
-import loadbalancing.loadbalancer.strategies.wrr.WRR;
-import loadbalancing.loadbalancer.strategies.wrr.WeightedServerReference;
 import org.apache.log4j.Logger;
 import org.apache.xmlrpc.WebServer;
 import org.xml.sax.SAXException;
@@ -154,6 +150,18 @@ public class LoadBalancer extends Thread implements IServer {
         System.out.println("Load Balancer started ...");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LoadBalancer that = (LoadBalancer) o;
+
+        if (port != that.port) return false;
+        if (sessionTable != null ? !sessionTable.equals(that.sessionTable) : that.sessionTable != null) return false;
+        if (!strategy.getClass().equals(that.strategy.getClass())) return false;
+        return true;
+    }
 
 
     /* Getters */
