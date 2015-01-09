@@ -16,7 +16,7 @@ import org.apache.xmlrpc.WebServer;
 public class SlaveServer extends Thread implements IServer {
     private static Logger log = Logger.getLogger(SlaveServer.class.getName());
 
-    private int port;
+    protected int port;
 
     /**
      * Initializes a new slave server object with a given port number.
