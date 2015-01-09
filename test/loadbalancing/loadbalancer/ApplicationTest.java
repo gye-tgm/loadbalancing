@@ -4,7 +4,8 @@ import loadbalancing.client.Client;
 import loadbalancing.slave.SlaveServer;
 
 /**
- * Created by gary on 08/01/15.
+ * @author Elias Frantar
+ * @author Gary Ye
  */
 public class ApplicationTest {
     private static int SLEEP_TIME = 2000;
