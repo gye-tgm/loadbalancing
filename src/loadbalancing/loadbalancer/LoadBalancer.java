@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class is a load balancer implementation that uses a specific load balancing strategy for balancing the traffic
@@ -49,11 +50,11 @@ public class LoadBalancer extends Thread implements IServer {
     public LoadBalancer(LoadBalancingStrategy strategy, int port) {
         this.strategy = strategy;
         this.port = port;
-        sessionTable = new HashMap<>();
+        sessionTable = new ConcurrentHashMap<>(); // must be thread-safe
     }
 
     @Override
-    public synchronized String call(String request) throws Exception {
+    public String call(String request) throws Exception {
         ServerReference serverReference;
         String requestor;
 
