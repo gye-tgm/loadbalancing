@@ -73,9 +73,11 @@ public class LoadBalancer extends Thread implements IServer {
 
         while (serverReference != null) { // try until we find a working server
             try {
-                strategy.increment(serverReference);
                 log.debug("Forwarding request to: " + serverReference.getUrl());
+
+                strategy.increment(serverReference); // signalize that a new connection has started
                 String result = serverReference.call(request);
+                strategy.decrement(serverReference); // notify that the connection has ended again
 
                 serverReference.setFailures(0); // the last call was successful
                 sessionTable.put(requestor, serverReference); // register or renew current session
