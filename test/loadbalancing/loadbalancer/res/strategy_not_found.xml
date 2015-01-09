@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <loadbalancing>
-    <strategyname value="This is not a strategy"/>
+    <strategyname>This is not a strategy</strategyname>
     <slave>
         <url>https://localhost:8080/RPC2</url>
     </slave>

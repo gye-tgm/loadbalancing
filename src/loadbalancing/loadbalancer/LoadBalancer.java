@@ -150,6 +150,19 @@ public class LoadBalancer extends Thread implements IServer {
         System.out.println("Load Balancer started ...");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LoadBalancer that = (LoadBalancer) o;
+
+        if (port != that.port) return false;
+        if (sessionTable != null ? !sessionTable.equals(that.sessionTable) : that.sessionTable != null) return false;
+        if (!strategy.getClass().equals(that.strategy.getClass())) return false;
+        return true;
+    }
+    
     /* Getters */
     public void setPort(int port) { this.port = port; }
 

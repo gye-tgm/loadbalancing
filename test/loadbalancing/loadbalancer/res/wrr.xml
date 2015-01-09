@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <loadbalancing>
-    <strategyname value="LCF"/>
+    <strategyname>WRR</strategyname>
     <slave>
         <url>https://localhost:8080/RPC2</url>
         <weight>30</weight>
