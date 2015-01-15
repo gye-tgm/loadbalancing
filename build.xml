@@ -35,14 +35,6 @@
     </java>
   </target>
 
-  <target name="run-loadbalancer" depends="compile" description="Runs a loadbalancer with the config file as config.xml">
-    <echo message="Exec dir in ${exec.dir}" /> 
-    <java classname="loadbalancing.loadbalancer.LoadBalancer" fork="true" dir="." classpathref="project.classpath">
-      <arg value="5000"/>
-      <arg value="config.xml"/>
-    </java>
-  </target>
-
   <target name="create-jar" description="Creates the Jar File">
     <jar destfile="loadbalancing_frantar_ye.jar">
       <resources>
@@ -60,6 +52,22 @@
       <arg value="Gary"/>
       <arg value="http://localhost:5000/RPC2"/>
       <arg value="A quick brown fowx jumps over the lazy dog"/>
+    </java>
+  </target>
+
+  <target name="run-loadbalancer" depends="compile" description="Runs a loadbalancer with the config file as config.xml">
+    <echo message="Exec dir in ${exec.dir}" />
+    <java classname="loadbalancing.loadbalancer.LoadBalancer" fork="true" dir="." classpathref="project.classpath">
+      <arg value="5000"/>
+      <arg value="config.xml"/>
+    </java>
+  </target>
+
+  <target name="run-servers" depends="compile" description="Runs a few SlaveServers">
+    <echo message="Exec dir in ${exec.dir}" />
+    <java classname="loadbalancing.slave.SlaveServer" fork="true" dir="." classpathref="project.classpath">
+      <arg value="9000"/>
+      <arg value="9001"/>
     </java>
   </target>
   
