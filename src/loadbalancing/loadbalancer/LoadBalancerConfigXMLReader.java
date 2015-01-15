@@ -29,10 +29,10 @@ public class LoadBalancerConfigXMLReader {
      *
      * @param xmlFile the xml config file
      * @return the loadbalancer
-     * @throws javax.xml.parsers.ParserConfigurationException
-     * @throws java.io.IOException
-     * @throws org.xml.sax.SAXException
-     * @throws StrategyNotFoundException
+     * @throws javax.xml.parsers.ParserConfigurationException thrown if the parser configuration was invalid
+     * @throws java.io.IOException thrown if an IOException occurred
+     * @throws org.xml.sax.SAXException thrown if a SAXException occurred
+     * @throws StrategyNotFoundException throw if the specified strategy was not found
      */
     public LoadBalancer readXML(File xmlFile) throws ParserConfigurationException, IOException, SAXException,
             StrategyNotFoundException {
