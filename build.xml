@@ -22,6 +22,10 @@
 	   classpathref="project.classpath"
 	   debug="true" deprecation="true"
 	   includeantruntime="false"/>
+    <javac srcdir="${test.dir}" destdir="${build.dir}"
+	   classpathref="project.classpath"
+	   debug="true" deprecation="true"
+	   includeantruntime="false"/>
   </target>
   
   <target name="run-slave" depends="compile" description="Runs a slave.">
@@ -40,8 +44,7 @@
   </target>
 
   <target name="create-jar" description="Creates the Jar File">
-    <echo message="Value!"/>
-    <jar destfile="rockthenet.jar">
+    <jar destfile="loadbalancing_frantar_ye.jar">
       <resources>
 	<fileset dir="." includes="lib/*.jar"/>
       </resources>
