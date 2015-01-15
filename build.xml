@@ -39,6 +39,18 @@
     </java>
   </target>
 
+  <target name="create-jar" description="Creates the Jar File">
+    <echo message="Value!"/>
+    <jar destfile="rockthenet.jar">
+      <resources>
+	<fileset dir="." includes="lib/*.jar"/>
+      </resources>
+      <fileset dir="${build.dir}"/>
+      <manifest>
+      </manifest>
+    </jar>
+  </target>
+
   <target name="run-client" depends="compile" description="Sends a query">
     <echo message="Exec dir in ${exec.dir}" /> 
     <java classname="loadbalancing.client.Client" fork="true" dir="." classpathref="project.classpath">
@@ -81,7 +93,7 @@
   <target name="create-doc">
     <mkdir dir="${doc.dir}" />
     <javadoc sourcepath="src" destdir="${doc.dir}">
-	<classpath refid="rockthenet.module.classpath"/>
+	<classpath refid="project.classpath"/>
     </javadoc>
   </target>
   <target name="clean-doc">
