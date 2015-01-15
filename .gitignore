@@ -25,3 +25,5 @@ test_dir/*
 out/
 
 javadoc/
+report/
+*.swp
