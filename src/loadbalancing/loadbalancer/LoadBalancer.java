@@ -1,6 +1,5 @@
 package loadbalancing.loadbalancer;
 
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
 import loadbalancing.Request;
 import loadbalancing.loadbalancer.strategies.LoadBalancingStrategy;
@@ -59,7 +58,7 @@ public class LoadBalancer extends Thread implements IServer {
 
         try {
             requestor = new Request(request).getRequestor(); // deserialize the request to get the requestor
-        } catch (DeserializationException e) {
+        } catch (RuntimeException e) {
             return "Corrupted request ...";
         }
 

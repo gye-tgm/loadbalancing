@@ -1,6 +1,5 @@
 package loadbalancing.slave;
 
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 import loadbalancing.IServer;
 import loadbalancing.Request;
 import org.apache.log4j.Logger;
@@ -44,7 +43,7 @@ public class SlaveServer extends Thread implements IServer {
         String content;
         try {
             content = new Request(request).getBody(); // deserialize the request to get the requestor
-        } catch (DeserializationException e) {
+        } catch (RuntimeException e) {
             return "Corrupted request ...";
         }
 
