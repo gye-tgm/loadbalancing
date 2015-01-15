@@ -34,15 +34,15 @@ public class LoadBalancerXMLConfigTest {
         reader = null;
     }
 
-    @Test(expected = StrategyNotFoundException.class)
-    public void testStrategyNotFoundException() throws StrategyNotFoundException, ParserConfigurationException,
-            SAXException, IOException {
+    @Test(expected = LoadBalancerConfigXMLReader.StrategyNotFoundException.class)
+    public void testStrategyNotFoundException() throws LoadBalancerConfigXMLReader.StrategyNotFoundException,
+            ParserConfigurationException, SAXException, IOException {
         reader.readXML(new File("test/loadbalancing/loadbalancer/res/strategy_not_found.xml"));
     }
 
     @Test
-    public void testReadLCFStrategy() throws StrategyNotFoundException, ParserConfigurationException,
-            SAXException, IOException {
+    public void testReadLCFStrategy() throws LoadBalancerConfigXMLReader.StrategyNotFoundException,
+            ParserConfigurationException, SAXException, IOException {
         LoadBalancer loadBalancer = reader.readXML(new File("test/loadbalancing/loadbalancer/res/lcf.xml"));
         LoadBalancer expected = new LoadBalancer(new LCF());
         expected.register(new LCFServerReference("https://localhost:9001/RPC2"));
@@ -51,7 +51,7 @@ public class LoadBalancerXMLConfigTest {
     }
 
     @Test
-    public void testReadWRRStrategy() throws StrategyNotFoundException, ParserConfigurationException,
+    public void testReadWRRStrategy() throws LoadBalancerConfigXMLReader.StrategyNotFoundException, ParserConfigurationException,
             SAXException, IOException {
         LoadBalancer loadBalancer = reader.readXML(new File("test/loadbalancing/loadbalancer/res/wrr.xml"));
         LoadBalancer expected = new LoadBalancer(new WRR());
