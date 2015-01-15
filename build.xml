@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="loadbalancing" default="all" basedir=".">
+<project name="loadbalancing" default="compile" basedir=".">
   <property name="build.dir" value="out" />
   <property name="exec.dir" value="out" />
   <property name="lib.dir" value="lib" />
@@ -27,13 +27,6 @@
 	   debug="true" deprecation="true"
 	   includeantruntime="false"/>
   </target>
-  
-  <target name="run-slave" depends="compile" description="Runs a slave.">
-    <echo message="Exec dir in ${exec.dir}" /> 
-    <java classname="loadbalancing.slave.SlaveServer" fork="true" dir="." classpathref="project.classpath">
-      <arg value="12560"/>
-    </java>
-  </target>
 
   <target name="create-jar" description="Creates the Jar File">
     <jar destfile="loadbalancing_frantar_ye.jar">
@@ -49,6 +42,7 @@
   <target name="run-client" depends="compile" description="Sends a query">
     <echo message="Exec dir in ${exec.dir}" /> 
     <java classname="loadbalancing.client.Client" fork="true" dir="." classpathref="project.classpath">
+      <sysproperty key="log4j.configuration" value="file:src/log4j.properties"/>
       <arg value="Gary"/>
       <arg value="http://localhost:5000/RPC2"/>
       <arg value="A quick brown fowx jumps over the lazy dog"/>
@@ -58,6 +52,7 @@
   <target name="run-loadbalancer" depends="compile" description="Runs a loadbalancer with the config file as config.xml">
     <echo message="Exec dir in ${exec.dir}" />
     <java classname="loadbalancing.loadbalancer.LoadBalancer" fork="true" dir="." classpathref="project.classpath">
+      <sysproperty key="log4j.configuration" value="file:src/log4j.properties"/>
       <arg value="5000"/>
       <arg value="config.xml"/>
     </java>
@@ -66,6 +61,7 @@
   <target name="run-servers" depends="compile" description="Runs a few SlaveServers">
     <echo message="Exec dir in ${exec.dir}" />
     <java classname="loadbalancing.slave.SlaveServer" fork="true" dir="." classpathref="project.classpath">
+      <sysproperty key="log4j.configuration" value="file:src/log4j.properties"/>
       <arg value="9000"/>
       <arg value="9001"/>
     </java>
@@ -82,9 +78,8 @@
 	      <property name="test.class.path" refid="test.class.path"/>
 	      <echo message="${test.class.path}"/>
       -->
-      <echo message="${env.JAVA_HOME}"/>
       <mkdir dir="${report.dir}" />
-	<junit fork="true" printsummary="yes" haltonfailure="${haltonfailure}">
+	<junit fork="true" printsummary="yes" haltonfailure="false">
 	    <classpath refid="project.classpath"/>
 	    <formatter type="xml"/>
 	    <batchtest fork="yes" todir="${report.dir}">
