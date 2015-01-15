@@ -8,8 +8,8 @@ public class XMLRPCTest {
 
     @org.junit.Before
     public void setUp() throws Exception {
-        serverReference = new ServerReference("http://localhost:5000/xmlrpc");
-        slaveServer = new SlaveServer(5000);
+        serverReference = new ServerReference("http://localhost:6000/xmlrpc");
+        slaveServer = new SlaveServer(6000);
     }
 
     @org.junit.After
