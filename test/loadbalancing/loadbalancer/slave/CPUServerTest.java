@@ -1,12 +1,13 @@
 package loadbalancing.loadbalancer.slave;
 
 import loadbalancing.slave.CPUServer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Performance test for {@link loadbalancing.loadbalancer.slave.CPUServer }
+ * Performance test for {@link loadbalancing.loadbalancer.slave.CPUServer}
  *
  * @author Gary Ye
  * @version 2014-01-09
@@ -14,6 +15,7 @@ import static org.junit.Assert.assertEquals;
 public class CPUServerTest {
 
     @Test
+    @Ignore
     public void testCPU() throws Exception {
         CPUServer cpuServer = new CPUServer(100);
 

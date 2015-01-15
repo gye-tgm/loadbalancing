@@ -1,6 +1,5 @@
-package test.loadbalancing.loadbalancer;
+package loadbalancing.loadbalancer;
 
-import loadbalancing.loadbalancer.ServerReference;
 import loadbalancing.slave.SlaveServer;
 
 public class XMLRPCTest {

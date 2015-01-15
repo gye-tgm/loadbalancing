@@ -1,6 +1,7 @@
 package loadbalancing.loadbalancer.slave;
 
 import loadbalancing.slave.IOServer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -12,6 +13,7 @@ import java.io.UnsupportedEncodingException;
  */
 public class IOServerTest {
     @Test
+    @Ignore
     public void testIO() throws FileNotFoundException, UnsupportedEncodingException {
         IOServer ioServer = new IOServer(234);
         System.out.println(ioServer.call("x"));
