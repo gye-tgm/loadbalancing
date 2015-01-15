@@ -28,4 +28,11 @@ public class RAMServer extends SlaveServer {
 
         return "RAM utilization finished (" + port + ")";
     }
+
+    public static void main(String[] args) {
+        for (String arg : args) {
+            System.out.println("RAMServer with port " + arg + " started");
+            new RAMServer(Integer.parseInt(arg)).start();
+        }
+    }
 }
