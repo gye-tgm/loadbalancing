@@ -18,3 +18,10 @@ hs_err_pid*
 *.pdf
 *.synctex.gz
 *.toc
+
+.idea/*
+test_dir/*
+*.iml
+out/
+
+javadoc/
