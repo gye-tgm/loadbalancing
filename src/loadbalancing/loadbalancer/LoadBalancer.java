@@ -142,7 +142,7 @@ public class LoadBalancer extends Thread implements IServer {
             loadBalancer = new LoadBalancerConfigXMLReader().readXML(file);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             System.err.printf("Error occurred while reading the file: %s\n", args[1]);
-        } catch (StrategyNotFoundException e) {
+        } catch (LoadBalancerConfigXMLReader.StrategyNotFoundException e) {
             System.err.println("Strategy not found! Choose from the following list: WRR, LCF");
         }
         loadBalancer.setPort(Integer.parseInt(args[0]));

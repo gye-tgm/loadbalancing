@@ -74,7 +74,7 @@ public class LoadBalancerConfigXMLReader {
     /**
      * A simple Exception thrown when a requested strategy was not found
      */
-    class StrategyNotFoundException extends Exception {
+    public class StrategyNotFoundException extends Exception {
     }
 }
 
