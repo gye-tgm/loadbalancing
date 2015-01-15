@@ -1,7 +1,5 @@
 package loadbalancing;
 
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
-
 /**
  * A simple serializable wrapper-class for a server request with additional header data such as the requestors name
  *
@@ -20,7 +18,7 @@ public class Request {
         String[] attrs = serialized.split(":");
 
         if (attrs.length != 2)
-            throw new DeserializationException("Serialized data was corrupted");
+            throw new RuntimeException("Serialized data was corrupted");
 
         this.requestor = attrs[0];
         this.body = attrs[1];
