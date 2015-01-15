@@ -15,6 +15,8 @@ import org.apache.xmlrpc.WebServer;
 public class SlaveServer extends Thread implements IServer {
     private static Logger log = Logger.getLogger(SlaveServer.class.getName());
 
+    private static final int SLEEP_TIME = 30000; // 30 seconds
+
     protected int port;
 
     /**
@@ -46,6 +48,11 @@ public class SlaveServer extends Thread implements IServer {
         } catch (RuntimeException e) {
             return "Corrupted request ...";
         }
+
+        /* wait a few seconds */
+        try {
+            Thread.sleep(SLEEP_TIME);
+        } catch (InterruptedException e) {}
 
         return "Response (" + port + "): Your request was '" + content + "'."; // we only want the request body
     }

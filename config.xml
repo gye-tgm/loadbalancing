@@ -2,9 +2,9 @@
 <loadbalancing>
   <strategyname>LCF</strategyname>
   <slave>
-    <url>http://localhost:12560/RPC2</url>
+    <url>http://localhost:9000</url>
   </slave>
   <slave>
-    <url>http://localhost:9002/RPC2</url>
+    <url>http://localhost:9001</url>
   </slave>
 </loadbalancing>
