@@ -23,7 +23,7 @@ public class XMLRPCTest {
     public void testServerReferenceToSlaveServerCall() throws Exception {
         slaveServer.start();
         Thread.sleep(1000); // Give the web server some time to start
-        System.out.println(serverReference.call("Hey!"));
+        System.out.println(serverReference.call("test:Hey!"));
     }
 
 }

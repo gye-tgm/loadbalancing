@@ -2,11 +2,11 @@
 <loadbalancing>
     <strategyname>WRR</strategyname>
     <slave>
-        <url>https://localhost:8080/RPC2</url>
+        <url>http://localhost:8080/RPC2</url>
         <weight>30</weight>
     </slave>
     <slave>
-        <url>https://localhost:8081/RPC2</url>
+        <url>http://localhost:8081/RPC2</url>
         <weight>58</weight>
     </slave>
 </loadbalancing>

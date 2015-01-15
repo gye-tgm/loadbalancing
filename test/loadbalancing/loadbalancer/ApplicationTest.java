@@ -23,7 +23,7 @@ public class ApplicationTest {
         SlaveServer.main(new String[]{"9001", "9002"});
         sleep();
 
-        LoadBalancer.main(new String[]{"5000", "src/res/lcf.xml"});
+        LoadBalancer.main(new String[]{"5000", "test/loadbalancing/loadbalancer/res/lcf.xml"});
         sleep();
 
         Client client = new Client("Gary", "http://localhost:5000/RPC2");
